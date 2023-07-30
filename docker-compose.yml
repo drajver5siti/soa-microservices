@@ -1,0 +1,93 @@
+version: '3'
+services:
+
+    api_gateway:
+        build: ./api_gateway
+        ports:
+            - "80:80"
+        networks:
+            - soa_network
+        env_file:
+            - ./api_gateway/.env
+
+############################## 
+
+    frontend:
+        build: ./frontend
+        volumes:
+            - ./frontend:/app
+        ports:
+            - "80"
+        networks:
+            - soa_network
+
+############################## 
+
+    user_postgres:
+        image: postgres:15-alpine
+        restart: always
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_DB=soa
+            - POSTGRES_PASSWORD=admin
+        networks:
+            - user_network
+        volumes:
+            - user_db:/var/lib/postgresql
+
+    user_service:
+        build: ./user_service
+        volumes:
+            - ./user_service:/var/www/soa
+        ports:
+            - "80"
+        networks:
+            - soa_network
+            - user_network
+        depends_on:
+            - user_postgres
+        environment:
+            - POSTGRES_CONN_STRING=postgres://postgres:admin@user_postgres:5432/soa
+            - PORT=80
+
+##############################
+
+    post_postgres:
+        image: postgres:15-alpine
+        restart: always
+        ports:
+            - "5433:5432"
+        environment:
+            - POSTGRES_DB=soa
+            - POSTGRES_PASSWORD=admin
+        networks:
+            - post_network
+
+    post_service:
+        build: ./post_service
+        volumes:
+            - ./post_service:/var/www/soa
+        ports:
+            - "80"
+        networks:
+            - soa_network
+            - post_network
+        environment:
+            - POSTGRES_CONN_STRING=postgres://postgres:admin@post_postgres:5432/soa
+            - PORT=80
+        depends_on:
+            - post_postgres
+        deploy:
+            replicas: 2
+
+##############################
+
+networks:
+    soa_network:
+    user_network:
+    post_network:
+
+volumes:
+    user_db:
+        driver: local

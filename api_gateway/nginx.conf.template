@@ -1,0 +1,14 @@
+server {
+    listen 80;
+    server_name soa;
+    charset utf-8;
+    default_type application/json;
+
+    location /users/ {
+        proxy_pass http://${USERS_API_HOST}:${USERS_API_PORT};
+    }
+
+    location /posts/ {
+        proxy_pass http://${POSTS_API_HOST}:${POSTS_API_PORT};
+    }
+}
