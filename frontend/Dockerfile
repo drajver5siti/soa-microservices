@@ -2,7 +2,7 @@ FROM node:18.17-alpine
 
 WORKDIR /app
 
-EXPOSE 3001
+EXPOSE 80
 
 # COPY package.json .
 

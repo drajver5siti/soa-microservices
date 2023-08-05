@@ -4,11 +4,15 @@ server {
     charset utf-8;
     default_type application/json;
 
-    location /users/ {
+    location / {
+        proxy_pass http://${FRONTEND_HOST}:${FRONTEND_PORT};
+    }
+
+    location /api/users/ {
         proxy_pass http://${USERS_API_HOST}:${USERS_API_PORT};
     }
 
-    location /posts/ {
+    location /api/posts/ {
         proxy_pass http://${POSTS_API_HOST}:${POSTS_API_PORT};
     }
 }
