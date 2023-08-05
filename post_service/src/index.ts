@@ -17,7 +17,7 @@ app.use(express.urlencoded({
     extended: false
 }))
 
-app.get("/posts/", (req, res) => res.json("hello world"));
+app.get("/api/posts/", (req, res) => res.json("hello world"));
 
 
 try {

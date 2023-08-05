@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookies from "cookie-parser"
 import userRoutes from "./routes/userRoutes.js"
 import loginRoutes from "./routes/loginRoutes.js"
 import registerRoutes from "./routes/registerRoutes.js"
@@ -14,6 +15,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());
+app.use(cookies());
 
 app.use(express.json())
 
@@ -23,7 +25,7 @@ app.use(express.urlencoded({
 
 app.use(validateJwt) 
 
-app.use('/users', loginRoutes, registerRoutes, userRoutes)
+app.use('/api/users', loginRoutes, registerRoutes, userRoutes)
 
 try {
     await db.authenticate();

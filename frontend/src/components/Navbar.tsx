@@ -1,9 +1,22 @@
-import { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks";
+import { useMutation } from "@tanstack/react-query";
+import { logout } from "../services/user";
 
 export const Navbar = () => {
+    const { user, logout: logoutContext } = useAuth();
 
-    const [isLoggedIn] = useState(() => localStorage.getItem("jwt"));
+    const mutation = useMutation({
+        mutationFn: logout,
+        onSettled: () => {
+            logoutContext();
+        }
+    })
+
+    if(!user) {
+        return <div></div>;
+    }
 
     return (
         <nav className="flex flex-row items-center">
@@ -20,11 +33,11 @@ export const Navbar = () => {
                 </li>
                 <li className="text-light-color ml-auto">
                     {
-                        isLoggedIn 
+                        user 
                         ? (
-                            <Link onClick={() => localStorage.removeItem("jwt")}>
+                            <button onClick={() => mutation.mutate()}>
                                 Logout
-                            </Link>
+                            </button>
                         ) : (
                             <Link to="/login">
                                 Login

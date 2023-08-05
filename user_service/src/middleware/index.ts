@@ -1,13 +1,19 @@
-import jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from "express";
+import { verifyAccessToken } from '../helpers/index.js';
 
 // TODO: rework this
 const excludedPaths = [
-    "/users/login",
-    "/users/login/",
-    
-    "/users/register",
-    "/users/register/"
+    "/api/users/login",
+    "/api/users/login/",
+
+    "/api/users/logout",
+    "/api/users/logout/",
+
+    "/api/users/refresh",
+    "/api/users/refresh/",
+
+    "/api/users/register",
+    "/api/users/register/"
 ];
 
 export const validateJwt = (req: Request, res: Response, next: NextFunction) => {
@@ -22,7 +28,7 @@ export const validateJwt = (req: Request, res: Response, next: NextFunction) => 
     }
 
     try {
-        jwt.verify(token, "superSecretKey");
+        verifyAccessToken(token);
         return next();
     } catch(err) {
         return res.send({ error: "Invalid token!" });

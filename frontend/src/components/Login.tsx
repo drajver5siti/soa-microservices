@@ -1,17 +1,20 @@
+import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { login, } from "../services/user";
 import { useNavigate } from "react-router";
+import { useAuth } from "../hooks";
 
 const Login = () => {
     const [data, setData] = useState({ username: "", password: "" });
+    const { login: loginContext } = useAuth();
 
     const navigate = useNavigate();
 
     const mutation = useMutation({
         mutationFn: login,
-        onSuccess: (data) => {
-            localStorage.setItem("jwt", data.token);
+        onSuccess: (data: { token: string }) => {
+            loginContext(data.token);
             navigate("/profile");
         },
     })
