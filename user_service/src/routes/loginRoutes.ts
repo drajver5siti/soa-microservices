@@ -10,17 +10,17 @@ router.post("/login", async (req: Request, res: Response) => {
     const { username, password } = req.body;
 
     if(!username || !password) {
-        return res.status(400).json({ error: "Invalid data!" });
+        return res.status(400).json({ message: "Invalid data!" });
     }
 
     const user = await User.findOne({ where: { username }});
 
     if(!user) {
-        return res.status(400).json({ error: 'Invalid credentials!' });
+        return res.status(400).json({ message: 'Invalid credentials!' });
     }
 
     if(!bcrypt.compareSync(password, user.password)) {
-        return res.json({ error: 'Invalid credentials'});
+        return res.json({ message: 'Invalid credentials'});
     }
 
     const accessToken = signAccessToken(user);
@@ -46,7 +46,7 @@ router.post("/logout", async (req: Request, res: Response) => {
 router.post('/refresh', async (req: Request, res: Response) => {
     const doError = () => {
         res.clearCookie("jwt");
-        return res.status(403).json({ error: "Invalid refresh token" });
+        return res.status(403).json({ message: "Invalid refresh token" });
     }
 
     const refreshToken = req.cookies?.refresh_token;

@@ -2,18 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { verifyAccessToken } from '../helpers/index.js';
 
 // TODO: rework this
-const excludedPaths = [
-    "/api/users/login",
-    "/api/users/login/",
-
-    "/api/users/logout",
-    "/api/users/logout/",
-
-    "/api/users/refresh",
-    "/api/users/refresh/",
-
-    "/api/users/register",
-    "/api/users/register/"
+const excludedPaths: string[] = [
 ];
 
 export const validateJwt = (req: Request, res: Response, next: NextFunction) => {

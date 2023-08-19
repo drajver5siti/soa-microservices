@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import db from "./db.js"
 import dotenv from "dotenv";
+import postRoutes from "./routes/postRoutes.js"
+import { validateJwt } from './middleware/index.js';
 
 dotenv.config();
 
@@ -17,12 +19,15 @@ app.use(express.urlencoded({
     extended: false
 }))
 
-app.get("/api/posts/", (req, res) => res.json("hello world"));
+app.use(validateJwt);
+
+app.use("/api/posts", postRoutes)
 
 
 try {
     await db.authenticate();
     await db.sync({ alter: true });
+    // await db.sync({ force: true })
     app.listen(port, () => console.log(`Listening on port ${port}.`));
 } catch (error) {
     console.log('Error while establishing connection with database: ', error);

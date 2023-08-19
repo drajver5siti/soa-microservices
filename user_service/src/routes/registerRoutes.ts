@@ -8,13 +8,13 @@ router.post("/register", async (req: Request, res: Response) => {
     const { username, password } = req.body; 
 
     if(!username || !password) {
-        return res.status(400).json({error: "Invalid data!" });
+        return res.status(400).json({message: "Invalid data!" });
     }
 
     const userExists = !!await User.findOne({ where: { username } });
 
     if(userExists) {
-        return res.status(400).json({ error: "Username already exists!" });
+        return res.status(400).json({ message: "Username already exists!" });
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);

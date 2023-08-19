@@ -4,9 +4,13 @@ import User from "../models/User.js";
 const router = express.Router();
 
 router.get("/:id", async (req: Request, res: Response) => {
-    const user = await User.findByPk(req.params.id);
+    try {
+        const user = await User.findByPk(req.params.id);
+        return res.json(user);
+    } catch(err) {
+        return res.status(400).json({ message: "Invalid user" });
+    }
 
-    return res.json(user);
 })
 
 router.get("/", async (req: Request, res: Response) => {

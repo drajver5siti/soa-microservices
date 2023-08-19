@@ -7,6 +7,9 @@ export default defineConfig({
   server: {
     strictPort: true,
     port: 80,
-    host: true
+    host: true,
+    hmr: {
+      clientPort: 10000,
+    }
   }
 })

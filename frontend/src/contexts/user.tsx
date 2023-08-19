@@ -5,19 +5,23 @@ import { parseUserFromToken } from "../helpers";
 import { useLocation, useNavigate } from "react-router";
 
 type AuthContextType = {
+    token: string,
     user: User | null,
     login: (token: string) => void,
     logout: () => void
 }
 
-export const AuthContext = createContext<AuthContextType>({ user: null, login: () => {}, logout: () => {}});
+export const AuthContext = createContext<AuthContextType>({ token: "", user: null, login: () => {}, logout: () => {}});
 
 const AuthProvider = ({ children }) => {
+    const [token, setToken] = useState("");
     const [user, setUser] = useState<User | null>(null);
+
     const location = useLocation();
     const navigate = useNavigate();
 
     const handleLogin = (token: string) => {
+        setToken(token);
         setUser(parseUserFromToken(token));
 
         const redirectPath = location.state?.from?.pathname || '/';
@@ -27,11 +31,13 @@ const AuthProvider = ({ children }) => {
     }
 
     const handleLogout = () => {
+        setToken("");
         setUser(null);
         navigate('/login');
     }
 
     const value = {
+        token,
         user,
         login: handleLogin,
         logout: handleLogout

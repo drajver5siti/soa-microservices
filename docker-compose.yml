@@ -9,6 +9,10 @@ services:
             - soa_network
         env_file:
             - ./api_gateway/.env
+        depends_on:
+            - frontend
+            - user_service
+            - post_service
 
 ############################## 
 
@@ -18,6 +22,8 @@ services:
             - ./frontend:/app
         ports:
             - "80"
+            # Serve vite hot reload on host port 10000
+            - "10000:80"
         networks:
             - soa_network
 
