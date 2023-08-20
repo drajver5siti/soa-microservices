@@ -15,4 +15,8 @@ server {
     location /api/posts/ {
         proxy_pass http://${POSTS_API_HOST}:${POSTS_API_PORT};
     }
+
+    location /api/notifications/ {
+        proxy_pass http://${NOTIFICATIONS_API_HOST}:${NOTIFICATIONS_API_PORT};
+    }
 }

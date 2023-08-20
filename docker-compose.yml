@@ -13,6 +13,7 @@ services:
             - frontend
             - user_service
             - post_service
+            - notification_service
 
 ############################## 
 
@@ -69,6 +70,8 @@ services:
             - POSTGRES_PASSWORD=admin
         networks:
             - post_network
+        volumes:
+            - post_db:/var/lib/postgresql
 
     post_service:
         build: ./post_service
@@ -89,11 +92,46 @@ services:
 
 ##############################
 
+    notification_postgres:
+        image: postgres:15-alpine
+        restart: always
+        ports:
+            - "5434:5432"
+        environment:
+            - POSTGRES_DB=soa
+            - POSTGRES_PASSWORD=admin
+        networks:
+            - notification_network
+        volumes:
+            - notification_db:/var/lib/postgresql
+
+    notification_service:
+        build: ./notification_service
+        volumes:
+            - ./notification_service:/var/www/soa
+        ports:
+            - "80"
+        networks:
+            - soa_network
+            - notification_network
+        environment:
+            - POSTGRES_CONN_STRING=postgres://postgres:admin@notification_postgres:5432/soa
+            - PORT=80
+        depends_on:
+            - notification_postgres
+        
+##############################
+
 networks:
     soa_network:
     user_network:
     post_network:
+    notification_network:
 
 volumes:
     user_db:
+        driver: local
+    post_db:
+        driver: local
+    notification_db:
         driver: local
