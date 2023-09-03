@@ -10,14 +10,19 @@ export const validateJwt = (req: Request, res: Response, next: NextFunction) => 
         return next();
     }
 
-    const token = req.headers?.authorization?.split(" ")?.[1];
+    let token = req.headers?.authorization?.split(" ")?.[1] ?? null;
+
+    if(!token) {
+        token = req?.query?.token?.toString() ?? null;
+    }
 
     if(!token) {
         return res.status(401).json({ message: "No API token provided!" });
     }
 
     try {
-        verifyAccessToken(token);
+        const user = verifyAccessToken(token);
+        req.user = user;
         return next();
     } catch(err) {
         return res.status(400).json({ message: "Invalid token!" });

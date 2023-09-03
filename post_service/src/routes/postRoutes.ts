@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import Post from "../models/Post.js";
+import { publishMessage } from "../rabbitmq.js";
 
 const router = express.Router();
 
@@ -17,6 +18,16 @@ router.post("/",async (req: Request, res: Response) => {
 
     try {
         const post = await Post.create(data)
+
+        publishMessage(
+            "posts", 
+            { 
+                type: 'post_created', 
+                id: post.id,
+                author: post.author, 
+            }
+        );
+
         return res.json(post);
     } catch(err) {
         return res.status(400).json({ message: "Invalid data provided"});
@@ -25,8 +36,16 @@ router.post("/",async (req: Request, res: Response) => {
 
 router.delete("/:id", async (req: Request, res: Response) => {
     try {
-        const post = await Post.findByPk(req.params.id);
-        post?.destroy();
+        await Post.destroy({ where: { id: req.params.id }});
+        
+        publishMessage(
+            "posts",
+            {
+                type: 'post_deleted',
+                id: req.params.id
+            }
+        );
+
         return res.json({});
     } catch(err) {
         return res.status(400).json({ message: "Post not found!"});

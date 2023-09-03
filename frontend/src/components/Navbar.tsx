@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../hooks";
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "../services/user";
+import Notifications from "./Notifications";
+import Friends from "./Friends";
 
 export const Navbar = () => {
     const { user, logout: logoutContext } = useAuth();
@@ -31,7 +33,13 @@ export const Navbar = () => {
                         Profile
                     </Link>
                 </li>
-                <li className="text-light-color ml-auto">
+                <li className="ml-auto">
+                    <Friends />
+                </li>
+                <li> 
+                    <Notifications />
+                </li>
+                <li className="text-light-color">
                     {
                         user 
                         ? (

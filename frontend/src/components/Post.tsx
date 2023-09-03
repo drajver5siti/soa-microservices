@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { PostData, Post as PostType } from "../types";
-import { FaRegClock,  } from 'react-icons/fa'
+import { FaEllipsisH, FaRegClock,  } from 'react-icons/fa'
 import DropdownList from "./DropdownList";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { removePost } from "../services/post";
@@ -33,7 +33,9 @@ const Post = ({ id, author, title, description, createdAt } : PostType) => {
         <article className="bg-dark-color text-white p-4 rounded-md">
             <div className="flex items-center">
                 <h2 className="text-3xl">{title}</h2>
-                <DropdownList className="ml-auto" items={items} />
+                <div className="ml-auto">
+                    <DropdownList icon={<FaEllipsisH />} items={items} />
+                </div>
             </div>
             <div className="flex items-center gap-x-2">
                 <FaRegClock className="text-xs" />

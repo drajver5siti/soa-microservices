@@ -1,31 +1,42 @@
-import React, { useState } from "react";
-import { FaEllipsisH } from "react-icons/fa";
+import React, { useRef, useState } from "react";
+import { useOnClickOutside } from "../hooks/useOnClickOutside";
 
 export type DropdownListItem = {
     name: string,
-    onClick: () => void
+    onClick: () => void,
+    render?: () => React.ReactElement
 }
 
 type DropdownListType = {
+    icon: React.ReactElement,
     items: DropdownListItem[],
-    className: string
+    className?: string
 }
 
-const DropdownList = ({ items, className }: DropdownListType) => {
+const DropdownList = ({ icon, items, className = "" }: DropdownListType) => {
     const [open, setOpen] = useState(false);
+    const ref = useRef(null);
+
+    useOnClickOutside(ref, () => setOpen(false));
 
     return (
-        <div className={`relative ${className}`}>
+        <div className="relative" ref={ref}>
             <button onClick={() => setOpen((prev) => !prev)}>
-                <FaEllipsisH />
+                {icon}
             </button>
             {
                 open &&
-                <ul className="absolute flex flex-col justify-center items-center rounded-sm overflow-hidden">
+                <ul className={`absolute flex flex-col justify-center items-center rounded-sm overflow-hidden ${className}`}>
                     {items.map((item, index) => (
                         <li key={item.name}>
                             <button className="px-6 py-1 bg-gray-600 text-light-color hover:bg-gray-700 focus-visible:outline-none focus-visible:bg-gray-700" onClick={() => { setOpen(false); return item.onClick() }}>
-                                {item.name}
+                                {
+
+                                    item.render ? item.render() :
+                                        <p className="text-left">
+                                            {item.name}
+                                        </p>
+                                }
                             </button>
                             {
                                 index !== items.length - 1 &&

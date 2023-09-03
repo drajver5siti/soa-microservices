@@ -3,31 +3,35 @@ import db from "../db.js";
 
 export interface NotificationModel extends Model<InferAttributes<NotificationModel>, InferCreationAttributes<NotificationModel>> {
     id: CreationOptional<number>,
-    author: number,
-    title: string,
-    description: string
+    type: string,
+    message: string
 }
 
-const Notification = db.define<NotificationModel>('Notifications', {
+const Notifications = db.define<NotificationModel>('Notifications', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    author: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    title: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    description: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    }
-    
+    type: DataTypes.STRING,
+    message: DataTypes.TEXT,
 });
 
-export { Notification };
-export default Notification;
+type NotificationStatus = "READ" | "UNREAD"
+
+export interface UserNotificationModel extends Model<InferAttributes<UserNotificationModel>, InferCreationAttributes<UserNotificationModel>> {
+    userId: number,
+    notificationId: number,
+    status: NotificationStatus
+}
+
+const UserNotifications = db.define<UserNotificationModel>("UserNotifications", {
+    userId: DataTypes.INTEGER,
+    notificationId: DataTypes.INTEGER,
+    status: DataTypes.STRING
+})
+
+export { 
+    Notifications, 
+    UserNotifications
+};

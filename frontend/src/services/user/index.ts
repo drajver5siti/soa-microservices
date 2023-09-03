@@ -3,6 +3,24 @@ import { API_PREFIX, calculateHeaders, defaultHeaders } from '..';
 import { User } from '../../types';
 
 
+export const loadFriends = async (token: string) => {
+    try {
+        const response = await fetch(`${API_PREFIX}/users/friends`, {
+            headers: calculateHeaders(token)
+        })
+
+        const data = await response.json();
+
+        if(!response.ok) {
+            throw data;
+        }
+
+        return data;
+    } catch(err) {
+        throw err;
+    }
+}
+
 export const load = async (token: string) => {
     const user = jwt<User>(token);
 

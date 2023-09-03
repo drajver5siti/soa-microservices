@@ -4,6 +4,8 @@ import db from "./db.js"
 import dotenv from "dotenv";
 import postRoutes from "./routes/postRoutes.js"
 import { validateJwt } from './middleware/index.js';
+import { registerListeners } from './listeners/index.js';
+import { establishConnection } from './rabbitmq.js';
 
 dotenv.config();
 
@@ -27,6 +29,8 @@ app.use("/api/posts", postRoutes)
 try {
     await db.authenticate();
     await db.sync({ alter: true });
+    await establishConnection();
+    registerListeners();
     // await db.sync({ force: true })
     app.listen(port, () => console.log(`Listening on port ${port}.`));
 } catch (error) {

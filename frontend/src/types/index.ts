@@ -22,3 +22,23 @@ export type PostData = {
     perPage: number,
     data: Post[]
 }
+
+export type Notification = {
+    id: number,
+    type: string,
+    message: string,
+    updatedAt: string,
+    createdAt: string
+}
+
+export type NotificationData = {
+    page: number,
+    perPage: number
+    data: Notification[]
+}
+
+export type Friend = {
+    id: number,
+    username: string,
+    status: string
+}

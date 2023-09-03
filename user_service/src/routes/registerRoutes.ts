@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import { publishMessage } from '../rabbitmq.js';
 
 const router = express.Router();
 
@@ -19,7 +20,15 @@ router.post("/register", async (req: Request, res: Response) => {
 
     const hashedPassword = bcrypt.hashSync(password, 10);
 
-    await User.create({ username, password: hashedPassword });
+    const user = await User.create({ username, password: hashedPassword });
+
+    publishMessage(
+        "users", 
+        { 
+            type: 'user_created', 
+            userId: user.id, 
+        }
+    ); 
 
     return res.json();
 })

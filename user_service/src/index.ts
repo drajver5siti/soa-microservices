@@ -7,6 +7,7 @@ import registerRoutes from "./routes/registerRoutes.js"
 import db from "./db.js"
 import dotenv from "dotenv";
 import { validateJwt } from './middleware/index.js';
+import { establishConnection } from './rabbitmq.js';
 
 dotenv.config();
 
@@ -30,7 +31,8 @@ app.use('/api/users', loginRoutes, registerRoutes, userRoutes)
 try {
     await db.authenticate();
     await db.sync({ alter: true });
+    await establishConnection();
     app.listen(port, () => console.log(`Listening on port ${port}.`));
 } catch (error) {
-    console.log('Error while establishing connection with database: ', error);
+    console.log('Error while establishing initial connections: ', error);
 }

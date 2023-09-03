@@ -3,6 +3,12 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
+router.get("/friends", async (req: Request, res: Response) => {
+    const users = await User.findAll();
+
+    return res.json(users);
+})
+
 router.get("/:id", async (req: Request, res: Response) => {
     try {
         const user = await User.findByPk(req.params.id);
