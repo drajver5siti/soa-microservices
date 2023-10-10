@@ -1,7 +1,9 @@
+import { internal } from "../helpers/index.js";
 import { Notifications, UserNotifications } from "../models/Notification.js";
 import { dispatch } from "../notificationsDispatcher.js";
 
 type PostCreated = {
+    token: string,
     type: "post_created",
     id: number,
     author: number,
@@ -17,20 +19,22 @@ type PostMessage = PostCreated | PostDeleted;
 
 export const handlePostMessage = async (data: PostMessage) => {
     if(data.type === "post_created") {
+
+        const user = await internal(`/users/${data.author}?include[]=friends`, data.token);
+
         const notification = await Notifications.create({
             type: data.type,
-            message: `${'Ivan'} just published a new post, check it out !`
+            message: `User ${user.username} just published a new post, check it out !`
         })
 
         await UserNotifications.create({
-            userId: data.author,
+            userId: -1,
             notificationId: notification.id,
             status: "UNREAD"
         })
 
-        // notification.setDataValue("status", "UNREAD");
-
-        dispatch([{ id: data.author }], notification);
+        // Change all with user.friends
+        dispatch("all", notification);
         
     } else if(data.type === "post_deleted") {
 

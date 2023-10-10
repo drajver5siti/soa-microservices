@@ -1,19 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { verifyAccessToken } from '../helpers/index.js';
+import { verifyAccessToken } from "../helpers/index.js";
 
 // TODO: rework this
-const excludedPaths = [
-    "/api/users/login",
-    "/api/users/login/",
-
-    "/api/users/logout",
-    "/api/users/logout/",
-
-    "/api/users/refresh",
-    "/api/users/refresh/",
-
-    "/api/users/register",
-    "/api/users/register/"
+const excludedPaths: string[] = [
 ];
 
 export const validateJwt = (req: Request, res: Response, next: NextFunction) => {
@@ -21,7 +10,11 @@ export const validateJwt = (req: Request, res: Response, next: NextFunction) => 
         return next();
     }
 
-    const token = req.headers?.authorization?.split(" ")?.[1];
+    let token = req.headers?.authorization?.split(" ")?.[1] ?? null;
+
+    if(!token) {
+        token = req?.query?.token?.toString() ?? null;
+    }
 
     if(!token) {
         return res.status(401).json({ message: "No API token provided!" });

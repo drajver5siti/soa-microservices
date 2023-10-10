@@ -28,8 +28,8 @@ const DropdownList = ({ icon, items, className = "" }: DropdownListType) => {
                 open &&
                 <ul className={`absolute flex flex-col justify-center items-center rounded-sm overflow-hidden ${className}`}>
                     {items.map((item, index) => (
-                        <li key={item.name}>
-                            <button className="px-6 py-1 bg-gray-600 text-light-color hover:bg-gray-700 focus-visible:outline-none focus-visible:bg-gray-700" onClick={() => { setOpen(false); return item.onClick() }}>
+                        <li key={item.name} className="w-full">
+                            <button className="w-full px-6 py-1 bg-gray-600 text-light-color hover:bg-gray-700 focus-visible:outline-none focus-visible:bg-gray-700" onClick={() => { setOpen(false); return item.onClick() }}>
                                 {
 
                                     item.render ? item.render() :

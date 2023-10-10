@@ -17,7 +17,9 @@ export const validateJwt = (req: Request, res: Response, next: NextFunction) => 
     }
 
     try {
-        verifyAccessToken(token);
+        const user = verifyAccessToken(token);
+        req.user = user;
+        req.token = token;
         return next();
     } catch(err) {
         return res.status(400).json({ message: "Invalid token!" });

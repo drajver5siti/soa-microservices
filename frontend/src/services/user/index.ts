@@ -2,10 +2,9 @@ import jwt from 'jwt-decode';
 import { API_PREFIX, calculateHeaders, defaultHeaders } from '..';
 import { User } from '../../types';
 
-
 export const loadFriends = async (token: string) => {
     try {
-        const response = await fetch(`${API_PREFIX}/users/friends`, {
+        const response = await fetch(`${API_PREFIX}/users/`, {
             headers: calculateHeaders(token)
         })
 

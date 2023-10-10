@@ -26,11 +26,22 @@ const renderNotification = (notification: Notification): DropdownListItem => {
 const Notifications = () => {
     const { data } = useNotifications();
 
+    // const unseenNotifications = data?.some(n => n.status === "UNREAD");
+    const unseenNotifications = false;
+
     return (
         <div className="relative z-20">
             <DropdownList
                 className="w-72 right-0"
-                icon={<FaBell className="text-light-color" />}
+                icon={
+                    <div className="relative">
+                        {
+                            unseenNotifications &&
+                            <span className="absolute top-0 right-0 w-2 h-2 bg-blue-500 rounded-full"></span>
+                        }
+                        <FaBell className="text-light-color" />
+                    </div>
+                }
                 items={data?.map(x => renderNotification(x)) ?? []}
             />
         </div>

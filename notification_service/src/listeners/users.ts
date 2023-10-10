@@ -27,7 +27,7 @@ export const handleUserMessage = async (data: UserMessage) => {
             status: "UNREAD"
         })
 
-        notification.setDataValue("status", "UNREAD");
+        // notification.setDataValue("status", "UNREAD");
         
         dispatch([{ id: data.userId }], notification);
 

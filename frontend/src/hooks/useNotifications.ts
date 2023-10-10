@@ -26,7 +26,7 @@ const useNotifications = () => {
 
         const existing = queryClient.getQueryData<NotificationData>(["notifications", token]);
         const existingNotifications = existing?.data ?? [];
-        const res = { ...existing, data: [newEvent, ...existingNotifications]};
+        const res = { ...existing, data: [{ ...newEvent, status: "UNREAD" }, ...existingNotifications]};
 
         queryClient.setQueryData(["notifications", token], res);
     }

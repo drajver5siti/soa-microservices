@@ -19,4 +19,17 @@ server {
     location /api/notifications/ {
         proxy_pass http://${NOTIFICATIONS_API_HOST}:${NOTIFICATIONS_API_PORT};
     }
+
+    
+    location /api/chat/ {
+        proxy_pass http://${CHAT_API_HOST}:${CHAT_API_PORT};
+    }
+
+    location /ws/chat/ {
+        proxy_pass http://${CHAT_API_HOST}:6666;
+        proxy_set_header Host $http_host;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection upgrade;
+    }
 }

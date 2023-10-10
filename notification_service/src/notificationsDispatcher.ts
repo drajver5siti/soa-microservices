@@ -22,7 +22,7 @@ type Recipient = {
     id: number
 }
 
-export const dispatch = (recipients: Recipient[], notification: NotificationModel) => {
+export const dispatch = (recipients: Recipient[] | "all", notification: NotificationModel) => {
     
     const message = `data: ${JSON.stringify({ 
         id: notification.id, 
@@ -31,6 +31,11 @@ export const dispatch = (recipients: Recipient[], notification: NotificationMode
         createdAt: notification.createdAt,
         
     })}\n\n`;
+
+    
+    if(recipients === "all") {
+        return subscribedClients.forEach(c => c.res.write(message));
+    }
 
     subscribedClients
         .filter(c => recipients.some((r) => r.id === c.id))

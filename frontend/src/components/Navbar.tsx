@@ -4,7 +4,9 @@ import { useAuth } from "../hooks";
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "../services/user";
 import Notifications from "./Notifications";
+import Chats from "./Chats";
 import Friends from "./Friends";
+import ChatProvider from "../contexts/chat";
 
 export const Navbar = () => {
     const { user, logout: logoutContext } = useAuth();
@@ -16,7 +18,7 @@ export const Navbar = () => {
         }
     })
 
-    if(!user) {
+    if (!user) {
         return <div></div>;
     }
 
@@ -33,28 +35,33 @@ export const Navbar = () => {
                         Profile
                     </Link>
                 </li>
-                <li className="ml-auto">
-                    <Friends />
-                </li>
-                <li> 
+                <ChatProvider>
+                    <li className="ml-auto">
+                        <Friends />
+                    </li>
+                    <li>
+                        <Chats />
+                    </li>
+                </ChatProvider>
+                <li>
                     <Notifications />
                 </li>
                 <li className="text-light-color">
                     {
-                        user 
-                        ? (
-                            <button onClick={() => mutation.mutate()}>
-                                Logout
-                            </button>
-                        ) : (
-                            <Link to="/login">
-                                Login
-                            </Link>
-                        )
+                        user
+                            ? (
+                                <button onClick={() => mutation.mutate()}>
+                                    Logout
+                                </button>
+                            ) : (
+                                <Link to="/login">
+                                    Login
+                                </Link>
+                            )
                     }
                 </li>
             </ul>
-        </nav>        
+        </nav>
     )
 }
 

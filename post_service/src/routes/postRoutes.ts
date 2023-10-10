@@ -22,6 +22,7 @@ router.post("/",async (req: Request, res: Response) => {
         publishMessage(
             "posts", 
             { 
+                token: req.token,
                 type: 'post_created', 
                 id: post.id,
                 author: post.author, 

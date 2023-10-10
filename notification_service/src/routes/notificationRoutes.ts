@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { subscribe, unsubscribe } from "../notificationsDispatcher.js";
 import { Notifications, UserNotifications } from "../models/Notification.js";
+import { Op } from "sequelize";
 
 const router = express.Router()
 
@@ -8,10 +9,10 @@ router.get('/', async (req: Request, res: Response) => {
 
     const userId = req.user.id as number;
 
-    const notificationsForUser = await UserNotifications.findAll({ where: { userId: userId } })
+    const notificationsForUser = await UserNotifications.findAll({ where: { [Op.or]: [{ userId: userId }, { userId: -1 }] } })
 
     const notificationIds = notificationsForUser.map(n => n.notificationId);
-    const notificationsStatus = notificationsForUser.map(n => ({ id: n.notificationId, status: n.status }))
+    // const notificationsStatus = notificationsForUser.map(n => ({ id: n.notificationId, status: n.status }))
 
     const page = req.query.page ? parseInt(req.query.page.toString()) : 1;
     const perPage = req.query.perPage ? parseInt(req.query.perPage.toString()) : 10;

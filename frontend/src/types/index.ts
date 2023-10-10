@@ -1,5 +1,7 @@
 export type User = {
-    id: number
+    id: number,
+    username: string,
+    createdAt: string
 }
 
 export type AddPost = {
@@ -28,7 +30,8 @@ export type Notification = {
     type: string,
     message: string,
     updatedAt: string,
-    createdAt: string
+    createdAt: string,
+    status: string
 }
 
 export type NotificationData = {
@@ -37,8 +40,21 @@ export type NotificationData = {
     data: Notification[]
 }
 
-export type Friend = {
-    id: number,
-    username: string,
-    status: string
+export type Chat = {
+    _id: string,
+    title: string | null,
+    participants: [
+        {
+            id: number
+        }
+    ],
+    messages: Message[],
+    type: "single_chat" | "group_chat"
+}
+
+export type Message = {
+    _id: string,
+    content: string,
+    userId: number,
+    createdAt: string
 }
